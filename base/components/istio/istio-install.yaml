@@ -1,0 +1,41 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: istio-system
+# ---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio
+  # You'll usually want to add your resources to the argocd namespace.
+  namespace: argocd
+  # Add this finalizer ONLY if you want these to cascade delete.
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # The project the application belongs to.
+  project: default
+
+  # Source of the application manifests
+  source:
+    repoURL: "https://github.com/istio/istio" # Can point to either a Helm chart repo or a git repo.
+    path: manifests/charts/istio-operator
+    targetRevision: 1.16.2
+    # path: base # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+
+    helm:
+      parameters:
+        - name: enableCRDTemplates
+          value: "true"
+      values: |
+        test: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+
+  # Sync policy
+  syncPolicy:
+    automated: {}
+    syncOptions: # Sync options which modifies sync behavior
+      - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.

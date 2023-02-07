@@ -1,0 +1,2 @@
+resources:
+  - istio/istio-install.yaml

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: namespaces
+  # You'll usually want to add your resources to the argocd namespace.
+  namespace: argocd
+spec:
+  # The project the application belongs to.
+  project: default
+
+  # Source of the application manifests
+  source:
+    path: overlay/pdev/shared1
+    targetRevision: HEAD # Branch or Tag
+
+    kustomize:
+      commonLabels:
+        testLabel: ok
