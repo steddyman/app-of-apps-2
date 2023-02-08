@@ -5,5 +5,5 @@ bases:
   - ../../../base
 
 patches:
-  - path: components/istio/istio-values.yaml
+  - path: addons/istio/istio-values.yaml
   - path: namespaces/namespaces.yaml
